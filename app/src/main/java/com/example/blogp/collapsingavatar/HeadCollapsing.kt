@@ -147,7 +147,7 @@ class HeadCollapsing(context: Context, attrs: AttributeSet?) : FrameLayout(conte
 
         //PUT collapsing avatar transparent
         when {
-            inversePercentage > ABROAD * 0.67 && inversePercentage < ABROAD * 0.77 -> {
+            inversePercentage > ABROAD * 0.47 && inversePercentage < ABROAD * 0.77 -> {
                 if (avatarContainerView.alpha != updatePercentage) {
                     avatarContainerView.alpha = updatePercentage
                     avatarContainerView.invalidate()
@@ -158,6 +158,7 @@ class HeadCollapsing(context: Context, attrs: AttributeSet?) : FrameLayout(conte
                 avatarContainerView.alpha = 0.0f
                 avatarContainerView.invalidate()
             }
+
             else -> handler.post {
                 if (avatarContainerView.alpha != 1f) {
                     avatarContainerView.alpha = 1f
