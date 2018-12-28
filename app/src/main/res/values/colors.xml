@@ -5,4 +5,6 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="color_white">#ffffff</color>
+
+    <color name="background_Image_tint">#70ac4501</color>
 </resources>

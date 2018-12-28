@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -12,7 +12,7 @@
         <item name="coordinatorLayoutStyle">@style/Widget.Support.CoordinatorLayout</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-    </style>
 
+    </style>
 
 </resources>
