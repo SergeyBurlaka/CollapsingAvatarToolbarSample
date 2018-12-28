@@ -1,9 +1,9 @@
-# collapsingAvatarToolbarSample
+## collapsingAvatarToolbarSample
 
 [![License Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=true)](http://www.apache.org/licenses/LICENSE-2.0)
 
-# read
-Read [my post How to animate Collapsing Avatar Toolbar Sample on medium](https://medium.com/@anatoliy8827/how-to-animate-collapsing-avatar-toolbar-sample-f3f37ab6c35e) please.
+
+## Read [my post How to animate Collapsing Avatar Toolbar Sample on medium](https://medium.com/@anatoliy8827/how-to-animate-collapsing-avatar-toolbar-sample-f3f37ab6c35e) please.
 
 ![](https://github.com/SergeyBurlaka/CollapsingAvatarToolbarSample/blob/develop/art/crop_gif.gif)
 
