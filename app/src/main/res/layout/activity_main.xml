@@ -16,7 +16,7 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/top_head_height"
-            android:background="@color/color_white"
+            android:background="@color/colorPrimary"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
@@ -58,7 +58,7 @@
                     android:layout_width="@dimen/default_expanded_image_size"
                     android:layout_height="@dimen/default_expanded_image_size"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:padding="8dp"
+                    android:padding="@dimen/item_decoration"
                     android:src="@drawable/avatar_img"
                     app:civ_border_color="@color/color_white"
                     app:civ_border_width="0.7dp" />
