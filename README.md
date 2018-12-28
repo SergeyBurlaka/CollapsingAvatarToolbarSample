@@ -6,7 +6,9 @@
 
 ![](https://github.com/SergeyBurlaka/CollapsingAvatarToolbarSample/blob/develop/art/test_high.gif)
 
-
+[![watch real app working on video](http://dl4.joxi.net/drive/2018/11/21/0030/3308/1993964/64/cc0eba3385.jpg)](https://youtu.be/iSfvY_ZNQwo)
+ 
+  
 
 
 
