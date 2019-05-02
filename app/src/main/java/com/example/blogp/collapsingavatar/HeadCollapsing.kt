@@ -17,13 +17,9 @@ import android.widget.ImageView
 class HeadCollapsing(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs), AppBarLayout.OnOffsetChangedListener {
 
     private lateinit var avatarContainerView: ImageView
-    //private lateinit var avatar: ImageView
-
     private val expandedImageSize: Float
     private val collapsedImageSize: Float
-
     private val activityMargin: Float
-
     private var valuesCalculatedAlready = false
     private lateinit var toolbar: Toolbar
     private lateinit var appBarLayout: AppBarLayout
@@ -31,34 +27,26 @@ class HeadCollapsing(context: Context, attrs: AttributeSet?) : FrameLayout(conte
     private var expandedHeight: Float = 0.toFloat()
     private var maxOffset: Float = 0.toFloat()
     private var lastOffset = -1
-    private var cashCollapseState: kotlin.Pair<Int, Int>? = null
-
-    //profile title
+    private var cashCollapseState: Pair<Int, Int>? = null
     private var titleToolbarText: AppCompatTextView? = null
     private var titleTolbarTextSingle: AppCompatTextView? = null
 
     companion object {
-        const val ABROAD = 0.95f
+        const val ABROAD = 0.97f
         const val TO_EXPANDED_STATE = 0
         const val TO_COLLAPSED_STATE = 1
         const val WAIT_FOR_SWITCH = 0
         const val SWITCHED = 1
     }
 
-    constructor(context: Context) : this(context, null) {
-        init()
-    }
+    private val mLowerLimitTransparently = ABROAD * 0.45
+    private val mUpperLimitTransparently = ABROAD * 0.69
 
     init {
-        init()
         val resources = resources
         collapsedImageSize = resources.getDimension(R.dimen.default_collapsed_image_size)
         expandedImageSize = resources.getDimension(R.dimen.default_expanded_image_size)
         activityMargin = resources.getDimension(R.dimen.activity_margin)
-    }
-
-    private fun init() {
-        //sdo nothing
     }
 
     private fun findParentAppBarLayout(): AppBarLayout {
@@ -80,9 +68,7 @@ class HeadCollapsing(context: Context, attrs: AttributeSet?) : FrameLayout(conte
         appBarLayout = findParentAppBarLayout()
         toolbar = findSiblingToolbar()
         avatarContainerView = findAvatarContainer()
-
         titleToolbarText = findTextView(appBarLayout, R.id.tv_profile_name)
-
         if (titleToolbarText != null) {
             titleTolbarTextSingle = findTextView(appBarLayout, R.id.tv_profile_name_single, true)
         }
@@ -139,114 +125,93 @@ class HeadCollapsing(context: Context, attrs: AttributeSet?) : FrameLayout(conte
 
     private fun updateViews(updatePercentage: Float) {
         val inversePercentage = 1 - updatePercentage
-        var translationY = 0f //\* expandedPercentage
+        var translationY = 0f
         var currHeight = 0f
-        var state = kotlin.Pair(0, 0)
-        var translationX = 0f
+        var translationX: Float
         var currentImageSize = 0
 
         //PUT collapsing avatar transparent
         when {
-            inversePercentage > ABROAD * 0.47 && inversePercentage < ABROAD * 0.77 -> {
+            inversePercentage > mLowerLimitTransparently && inversePercentage < mUpperLimitTransparently -> {
                 if (avatarContainerView.alpha != updatePercentage) {
                     avatarContainerView.alpha = updatePercentage
                     avatarContainerView.invalidate()
                 }
             }
-
-            inversePercentage > ABROAD * 0.77 && inversePercentage < ABROAD -> {
+            inversePercentage > mUpperLimitTransparently && inversePercentage < ABROAD -> {
                 avatarContainerView.alpha = 0.0f
                 avatarContainerView.invalidate()
             }
-
-            else -> handler.post {
+            else ->
                 if (avatarContainerView.alpha != 1f) {
                     avatarContainerView.alpha = 1f
                     avatarContainerView.invalidate()
                 }
-            }
         }
 
-        //PUT TOOLBAR title
         when {
+            inversePercentage < ABROAD -> Pair(TO_EXPANDED_STATE, cashCollapseState?.second
+                    ?: WAIT_FOR_SWITCH)
+            else -> Pair(TO_COLLAPSED_STATE, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
+        }.apply {
+            //PUT collapsed/expended sizes for views
+            when {
+                cashCollapseState != null && cashCollapseState != this -> {
+                    when (first) {
+                        TO_EXPANDED_STATE -> {
+                            translationY = toolbar.height.toFloat()
+                            currHeight = expandedHeight
+                            currentImageSize = expandedImageSize.toInt()
+                            avatarContainerView.translationX = 0F
+                            titleToolbarText?.visibility = View.VISIBLE
+                            titleTolbarTextSingle?.visibility = View.INVISIBLE
+                        }
 
-            inversePercentage < ABROAD -> {
-                state = kotlin.Pair(TO_EXPANDED_STATE, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
-                titleToolbarText?.visibility = View.VISIBLE
-                titleTolbarTextSingle?.visibility = View.INVISIBLE
-            }
+                        TO_COLLAPSED_STATE -> {
+                            currentImageSize = collapsedImageSize.toInt()
+                            translationY = (appBarLayout.height - toolbar.height).toFloat()
+                            currHeight = collapsedHeight
+                            translationX = appBarLayout.width / 2f - collapsedImageSize / 2 - activityMargin * 2
 
-            inversePercentage > ABROAD -> {
-                state = kotlin.Pair(TO_COLLAPSED_STATE, cashCollapseState?.second
-                        ?: WAIT_FOR_SWITCH)
+                            ValueAnimator.ofFloat(avatarContainerView.translationX, translationX).apply {
+                                addUpdateListener { avatarContainerView.translationX = it.animatedValue as Float }
+                                duration = 350
+                                (first == TO_COLLAPSED_STATE).apply {
+                                    if (this) interpolator = LinearInterpolator()
+                                }
+                                start()
+                            }
 
-                titleToolbarText?.visibility = View.INVISIBLE
-                titleTolbarTextSingle?.visibility = View.VISIBLE
+                            titleToolbarText?.visibility = View.INVISIBLE
+                            titleTolbarTextSingle?.visibility = View.VISIBLE
 
+                            titleTolbarTextSingle?.let {
+                                it.apply {
+                                    alpha = 0.0f
+                                    this.translationX = width.toFloat() / 2
+                                    animate().translationX(0f)
+                                            .alpha(1.0f)
+                                            .setDuration(450)
+                                            .setListener(null)
+                                }
+                            }
 
-                titleTolbarTextSingle?.let {
-                    animateShowText(it)
+                        }
+                    }
+                    this@HeadCollapsing.translationY = translationY
+                    this@HeadCollapsing.layoutParams.height = currHeight.toInt()
+                    avatarContainerView.layoutParams.height = currentImageSize
+                    avatarContainerView.layoutParams.width = currentImageSize
+
+                    this@HeadCollapsing.requestLayout()
+
+                    //SWITCH STATE CASE
+                    cashCollapseState = Pair(first, SWITCHED)
                 }
-            }
-        }
-
-        //PUT collapsed/expended sizes for views
-        when {
-            cashCollapseState != null && cashCollapseState != state -> {
-                when (state.first) {
-                    TO_EXPANDED_STATE -> {
-                        translationY = toolbar.height.toFloat()
-                        currHeight = expandedHeight
-                        translationX = 0f
-                        currentImageSize = expandedImageSize.toInt()
-                    }
-                    TO_COLLAPSED_STATE -> {
-                        currentImageSize = collapsedImageSize.toInt()
-                        translationY = (appBarLayout.height - toolbar.height).toFloat()
-                        currHeight = collapsedHeight
-                        translationX = appBarLayout.width / 2f - collapsedImageSize / 2 - activityMargin * 2
-                    }
+                else -> {
+                    cashCollapseState = Pair(first, WAIT_FOR_SWITCH)
                 }
-                this.translationY = translationY
-
-                this.layoutParams.height = currHeight.toInt()
-
-                ValueAnimator.ofFloat(avatarContainerView.translationX, translationX).apply {
-                    addUpdateListener {
-                        avatarContainerView.translationX = it.animatedValue as Float
-                    }
-
-                    duration = 350
-                    (state.first == TO_COLLAPSED_STATE).apply {
-                        if (this) interpolator = LinearInterpolator()
-                    }
-                    start()
-                }
-
-                avatarContainerView.layoutParams.height = currentImageSize
-                avatarContainerView.layoutParams.width = currentImageSize
-
-                this.requestLayout()
-
-                //SWITCH STATE CASE
-                cashCollapseState = kotlin.Pair(state.first, SWITCHED)
-            }
-            else -> {
-                cashCollapseState = kotlin.Pair(state.first, WAIT_FOR_SWITCH)
             }
         }
     }
-
-    private fun animateShowText(appCompatTextView: AppCompatTextView) {
-        appCompatTextView.apply {
-            alpha = 0.0f
-            this.translationX = width.toFloat() / 2
-            animate()
-                    .translationX(0f)
-                    .alpha(1.0f)
-                    .setDuration(500)
-                    .setListener(null)
-        }
-    }
-
 }
