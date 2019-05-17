@@ -10,6 +10,7 @@ import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
+import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 
@@ -106,9 +107,8 @@ class MainActivity : AppCompatActivity() {
                                         avatarContainerView.translationX = it.animatedValue as Float
                                     }
                                 }
-                                interpolator = AnticipateOvershootInterpolator()
-                                startDelay = 75
-                                duration = 400
+                                interpolator = LinearInterpolator()
+                                duration = 350
                                 start()
                             }
                             /**/
@@ -118,10 +118,9 @@ class MainActivity : AppCompatActivity() {
                                 alpha = 0.3f
                                 this.translationX = width.toFloat() / 2
                                 animate().translationX(0f)
-                                        .setInterpolator(AnticipateOvershootInterpolator())
+                                        .setInterpolator(LinearInterpolator())
                                         .alpha(1.0f)
-                                        .setStartDelay(75)
-                                        .setDuration(400)
+                                        .setDuration(450)
                                         .setListener(null)
                             }
                         }
