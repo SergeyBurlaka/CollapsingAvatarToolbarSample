@@ -3,7 +3,6 @@ package com.example.blogp.collapsingavatar
 
 import android.animation.ValueAnimator
 import android.os.Bundle
-import android.os.Handler
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +12,7 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
+import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,15 +26,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarLayout: AppBarLayout
     private var collapsedHeight: Float = 0F
     private var expandedHeight: Float = 0F
-    private var maxOffset: Float = 0F
-    private var lastOffset = -1
     private var cashCollapseState: Pair<Int, Int>? = null
 
     private lateinit var titleToolbarText: AppCompatTextView
     private lateinit var titleToolbarTextSingle: AppCompatTextView
     private lateinit var collapsingAvatarContainer: FrameLayout
-    private lateinit var background:FrameLayout
-    private lateinit var appBarStateChangeListener: AppBarLayout.OnOffsetChangedListener
+    private lateinit var background: FrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,26 +48,24 @@ class MainActivity : AppCompatActivity() {
         titleToolbarTextSingle = findViewById(R.id.tv_profile_name_single)
         background = findViewById(R.id.fl_background)
         /**/
-        appBarStateChangeListener = AppBarLayout.OnOffsetChangedListener { _, offset ->
-            if (lastOffset == offset) {
-                return@OnOffsetChangedListener
-            }
+        appBarLayout.addOnOffsetChangedListener(
+                AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
+                    if (!isValuesCalculatedAlready) {
+                        collapsedHeight = toolbar.height.toFloat()
+                        expandedHeight = appBarLayout.totalScrollRange.toFloat() //appBarLayout.height - toolbar.height
+                        isValuesCalculatedAlready = true
+                        Timber.d(" \n app bar height = ${appBarLayout.totalScrollRange.toFloat()} ; \n toolbar height = ${toolbar.height.toFloat()} ;  \n appbar height = ${appBarLayout.height} ; \n  collapsed height = $collapsedHeight ;\n expanded height (max offset) = $expandedHeight ")
+                    }
 
-            lastOffset = offset
-            if (!isValuesCalculatedAlready) {
-                collapsedHeight = toolbar.height.toFloat()
-                expandedHeight = (appBarLayout.height - toolbar.height).toFloat()
-                maxOffset = expandedHeight
-                isValuesCalculatedAlready = true
-            }
-            val expandedPercentage = 1 - -offset / maxOffset
-            updateViews(expandedPercentage)
-        }
-        appBarLayout.addOnOffsetChangedListener(appBarStateChangeListener)
+                    val offset = Math.abs(i / appBarLayout.totalScrollRange.toFloat())
+
+                    Timber.d(" expand perc = $offset  offset = $offset")
+
+                    updateViews(offset)
+                })
     }
 
-    private fun updateViews(updatePercentage: Float) {
-        val inversePercentage = 1 - updatePercentage
+    private fun updateViews(percentOffset: Float) {
         var translationY = 0f
         var currHeight = 0f
         var translationX: Float
@@ -78,13 +73,13 @@ class MainActivity : AppCompatActivity() {
 
         //Collapsing avatar transparent
         when {
-            inversePercentage > mLowerLimitTransparently && inversePercentage < mUpperLimitTransparently -> {
-                if (avatarContainerView.alpha != updatePercentage) {
-                    avatarContainerView.alpha = updatePercentage
+            percentOffset > mLowerLimitTransparently && percentOffset < mUpperLimitTransparently -> {
+                if (avatarContainerView.alpha != percentOffset) {
+                    avatarContainerView.alpha = percentOffset
                     avatarContainerView.invalidate()
                 }
             }
-            inversePercentage > mUpperLimitTransparently && inversePercentage < ABROAD -> {
+            percentOffset > mUpperLimitTransparently && percentOffset < ABROAD -> {
                 avatarContainerView.alpha = 0.0f
                 avatarContainerView.invalidate()
             }
@@ -97,7 +92,8 @@ class MainActivity : AppCompatActivity() {
 
         //Collapsed/expended sizes for views
         when {
-            inversePercentage < ABROAD -> Pair(TO_EXPANDED_STATE, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
+            percentOffset < ABROAD -> Pair(TO_EXPANDED_STATE, cashCollapseState?.second
+                    ?: WAIT_FOR_SWITCH)
             else -> Pair(TO_COLLAPSED_STATE, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
         }.apply {
             when {
