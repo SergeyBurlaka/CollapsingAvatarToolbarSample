@@ -9,25 +9,19 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
 import android.view.View
-import android.view.animation.LinearInterpolator
+import android.view.animation.AnticipateOvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
-import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var avatarContainerView: ImageView
     private var expandedImageSize: Float = 0F
     private var collapsedImageSize: Float = 0F
-    private var activityMargin: Float = 0F
-    private var isValuesCalculatedAlready = false
+    private var margin: Float = 0F
     private lateinit var toolbar: Toolbar
     private lateinit var appBarLayout: AppBarLayout
-    private var collapsedHeight: Float = 0F
-    private var expandedHeight: Float = 0F
     private var cashCollapseState: Pair<Int, Int>? = null
-
     private lateinit var titleToolbarText: AppCompatTextView
     private lateinit var titleToolbarTextSingle: AppCompatTextView
     private lateinit var collapsingAvatarContainer: FrameLayout
@@ -39,10 +33,11 @@ class MainActivity : AppCompatActivity() {
         /**/
         expandedImageSize = resources.getDimension(R.dimen.default_expanded_image_size)
         collapsedImageSize = resources.getDimension(R.dimen.default_collapsed_image_size)
-        activityMargin = resources.getDimension(R.dimen.activity_margin)
+        margin = resources.getDimension(R.dimen.item_decoration)
         collapsingAvatarContainer = findViewById(R.id.stuff_container)
         appBarLayout = findViewById(R.id.app_bar_layout)
         toolbar = findViewById(R.id.anim_toolbar)
+        toolbar.visibility = View.INVISIBLE
         avatarContainerView = findViewById(R.id.imgb_avatar_wrap)
         titleToolbarText = findViewById(R.id.tv_profile_name)
         titleToolbarTextSingle = findViewById(R.id.tv_profile_name_single)
@@ -50,58 +45,47 @@ class MainActivity : AppCompatActivity() {
         /**/
         appBarLayout.addOnOffsetChangedListener(
                 AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
-                    if (!isValuesCalculatedAlready) {
-                        collapsedHeight = toolbar.height.toFloat()
-                        expandedHeight = appBarLayout.totalScrollRange.toFloat() //appBarLayout.height - toolbar.height
-                        isValuesCalculatedAlready = true
-                        Timber.d(" \n app bar height = ${appBarLayout.totalScrollRange.toFloat()} ; \n toolbar height = ${toolbar.height.toFloat()} ;  \n appbar height = ${appBarLayout.height} ; \n  collapsed height = $collapsedHeight ;\n expanded height (max offset) = $expandedHeight ")
-                    }
-
                     val offset = Math.abs(i / appBarLayout.totalScrollRange.toFloat())
-
-                    Timber.d(" expand perc = $offset  offset = $offset")
-
                     updateViews(offset)
                 })
     }
 
     private fun updateViews(percentOffset: Float) {
-        var translationY = 0f
-        var currHeight = 0f
-        var translationX: Float
-        var currentImageSize = 0
-
-        //Collapsing avatar transparent
+        /* Collapsing avatar transparent*/
         when {
-            percentOffset > mLowerLimitTransparently && percentOffset < mUpperLimitTransparently -> {
-                if (avatarContainerView.alpha != percentOffset) {
-                    avatarContainerView.alpha = percentOffset
-                    avatarContainerView.invalidate()
-                }
-            }
             percentOffset > mUpperLimitTransparently && percentOffset < ABROAD -> {
                 avatarContainerView.alpha = 0.0f
-                avatarContainerView.invalidate()
+                titleToolbarText.alpha = 1 - percentOffset
             }
-            else ->
-                if (avatarContainerView.alpha != 1f) {
-                    avatarContainerView.alpha = 1f
-                    avatarContainerView.invalidate()
-                }
-        }
 
-        //Collapsed/expended sizes for views
-        when {
-            percentOffset < ABROAD -> Pair(TO_EXPANDED_STATE, cashCollapseState?.second
-                    ?: WAIT_FOR_SWITCH)
-            else -> Pair(TO_COLLAPSED_STATE, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
-        }.apply {
+            percentOffset > mLowerLimitTransparently && percentOffset < mUpperLimitTransparently -> {
+                avatarContainerView.alpha = 1 - percentOffset
+                titleToolbarText.alpha = 1f
+            }
+
+            else -> avatarContainerView.alpha = 1f
+        }
+        /*Collapsed/expended sizes for views*/
+        val result: Pair<Int, Int> = when {
+            percentOffset < ABROAD -> {
+                Pair(TO_EXPANDED_STATE, cashCollapseState?.second
+                        ?: WAIT_FOR_SWITCH)
+            }
+            else -> {
+                Pair(TO_COLLAPSED_STATE, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
+            }
+        }
+        result.apply {
+            var translationY = 0f
+            var headContainerHeight = 0f
+            val translationX: Float
+            var currentImageSize = 0
             when {
                 cashCollapseState != null && cashCollapseState != this -> {
                     when (first) {
                         TO_EXPANDED_STATE -> {
                             translationY = toolbar.height.toFloat()
-                            currHeight = expandedHeight
+                            headContainerHeight = appBarLayout.totalScrollRange.toFloat()
                             currentImageSize = expandedImageSize.toInt()
                             avatarContainerView.translationX = 0F
                             titleToolbarText.visibility = View.VISIBLE
@@ -112,38 +96,47 @@ class MainActivity : AppCompatActivity() {
                         TO_COLLAPSED_STATE -> {
                             background.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
                             currentImageSize = collapsedImageSize.toInt()
-                            translationY = (appBarLayout.height - toolbar.height).toFloat()
-                            currHeight = collapsedHeight
-                            translationX = appBarLayout.width / 2f - collapsedImageSize / 2 - activityMargin * 2
+                            translationY = appBarLayout.totalScrollRange.toFloat()
+                            headContainerHeight = toolbar.height.toFloat()
+                            translationX = appBarLayout.width / 2f - collapsedImageSize / 2 - margin * 2
                             /**/
                             ValueAnimator.ofFloat(avatarContainerView.translationX, translationX).apply {
-                                addUpdateListener { avatarContainerView.translationX = it.animatedValue as Float }
-                                (first == TO_COLLAPSED_STATE).apply {
-                                    if (this) interpolator = LinearInterpolator()
+                                addUpdateListener {
+                                    if (cashCollapseState!!.first == TO_COLLAPSED_STATE) {
+                                        avatarContainerView.translationX = it.animatedValue as Float
+                                    }
                                 }
+                                interpolator = AnticipateOvershootInterpolator()
+                                startDelay = 75
+                                duration = 400
                                 start()
                             }
                             /**/
                             titleToolbarText.visibility = View.INVISIBLE
-                            titleToolbarTextSingle.visibility = View.VISIBLE
-                            titleToolbarTextSingle.let {
-                                it.apply {
-                                    alpha = 0.0f
-                                    this.translationX = width.toFloat() / 2
-                                    animate().translationX(0f)
-                                            .alpha(1.0f)
-                                            .setDuration(450)
-                                            .setListener(null)
-                                }
+                            titleToolbarTextSingle.apply {
+                                visibility = View.VISIBLE
+                                alpha = 0.3f
+                                this.translationX = width.toFloat() / 2
+                                animate().translationX(0f)
+                                        .setInterpolator(AnticipateOvershootInterpolator())
+                                        .alpha(1.0f)
+                                        .setStartDelay(75)
+                                        .setDuration(400)
+                                        .setListener(null)
                             }
-
                         }
                     }
-                    collapsingAvatarContainer.translationY = translationY
-                    collapsingAvatarContainer.layoutParams.height = currHeight.toInt()
-                    avatarContainerView.layoutParams.height = currentImageSize
-                    avatarContainerView.layoutParams.width = currentImageSize
-                    collapsingAvatarContainer.requestLayout()
+
+                    avatarContainerView.apply {
+                        layoutParams.height = currentImageSize
+                        layoutParams.width = currentImageSize
+                    }
+                    collapsingAvatarContainer.apply {
+                        layoutParams.height = headContainerHeight.toInt()
+                        this.translationY = translationY
+                        requestLayout()
+                    }
+
                     /**/
                     cashCollapseState = Pair(first, SWITCHED)
                 }
@@ -163,5 +156,5 @@ class MainActivity : AppCompatActivity() {
     }
 
     private val mLowerLimitTransparently = ABROAD * 0.45
-    private val mUpperLimitTransparently = ABROAD * 0.69
+    private val mUpperLimitTransparently = ABROAD * 0.65
 }
