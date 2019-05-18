@@ -1,3 +1,4 @@
+/*
 package com.example.blogp.collapsingavatar
 
 
@@ -30,7 +31,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        /**/
+        */
+/**//*
+
         expandedImageSize = resources.getDimension(R.dimen.default_expanded_image_size)
         collapsedImageSize = resources.getDimension(R.dimen.default_collapsed_image_size)
         margin = resources.getDimension(R.dimen.item_decoration)
@@ -42,7 +45,9 @@ class MainActivity : AppCompatActivity() {
         titleToolbarText = findViewById(R.id.tv_profile_name)
         titleToolbarTextSingle = findViewById(R.id.tv_profile_name_single)
         background = findViewById(R.id.fl_background)
-        /**/
+        */
+/**//*
+
         appBarLayout.addOnOffsetChangedListener(
                 AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
                     val offset = Math.abs(i / appBarLayout.totalScrollRange.toFloat())
@@ -51,7 +56,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateViews(percentOffset: Float) {
-        /* Collapsing avatar transparent*/
+        */
+/* Collapsing avatar transparent*//*
+
         when {
             percentOffset > mUpperLimitTransparently && percentOffset < ABROAD -> {
                 avatarContainerView.alpha = 0.0f
@@ -65,7 +72,9 @@ class MainActivity : AppCompatActivity() {
 
             else -> avatarContainerView.alpha = 1f
         }
-        /*Collapsed/expended sizes for views*/
+        */
+/*Collapsed/expended sizes for views*//*
+
         val result: Pair<Int, Int> = when {
             percentOffset < ABROAD -> {
                 Pair(TO_EXPANDED_STATE, cashCollapseState?.second
@@ -99,7 +108,9 @@ class MainActivity : AppCompatActivity() {
                             translationY = appBarLayout.totalScrollRange.toFloat()
                             headContainerHeight = toolbar.height.toFloat()
                             translationX = appBarLayout.width / 2f - collapsedImageSize / 2 - margin * 2
-                            /**/
+                            */
+/**//*
+
                             ValueAnimator.ofFloat(avatarContainerView.translationX, translationX).apply {
                                 addUpdateListener {
                                     if (cashCollapseState!!.first == TO_COLLAPSED_STATE) {
@@ -111,7 +122,9 @@ class MainActivity : AppCompatActivity() {
                                 duration = 400
                                 start()
                             }
-                            /**/
+                            */
+/**//*
+
                             titleToolbarText.visibility = View.INVISIBLE
                             titleToolbarTextSingle.apply {
                                 visibility = View.VISIBLE
@@ -137,7 +150,9 @@ class MainActivity : AppCompatActivity() {
                         requestLayout()
                     }
 
-                    /**/
+                    */
+/**//*
+
                     cashCollapseState = Pair(first, SWITCHED)
                 }
                 else -> {
@@ -158,3 +173,4 @@ class MainActivity : AppCompatActivity() {
     private val mLowerLimitTransparently = ABROAD * 0.45
     private val mUpperLimitTransparently = ABROAD * 0.65
 }
+*/

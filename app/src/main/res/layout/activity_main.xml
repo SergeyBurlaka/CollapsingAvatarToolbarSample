@@ -10,7 +10,8 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:layout_behavior=".FlingBehavior">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
@@ -18,7 +19,7 @@
             android:layout_height="@dimen/top_head_height"
             android:background="@color/color_white"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -53,11 +54,6 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-            <FrameLayout
-                android:id="@+id/stuff_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="match_parent"
@@ -76,9 +72,9 @@
                     android:layout_gravity="bottom|center_horizontal"
                     android:padding="@dimen/item_decoration"
                     android:src="@drawable/avatar_img"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="@color/color_white"
                    />
-
-            </FrameLayout>
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_profile_name_single"
