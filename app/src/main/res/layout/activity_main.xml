@@ -18,7 +18,7 @@
             android:layout_height="@dimen/top_head_height"
             android:background="@color/color_white"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -64,10 +64,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:gravity="center"
+                    android:textAllCaps="true"
                     android:text="Christian Bale"
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
-                    android:visibility="gone" />
+                    android:visibility="invisible" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imgb_avatar_wrap"
@@ -93,6 +94,7 @@
                 android:textColor="@color/color_white"
                 android:textSize="17sp"
                 android:visibility="invisible"
+                android:textAllCaps="true"
                 app:layout_collapseMode="pin"
                 tools:visibility="visible" />
 
@@ -103,6 +105,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/activity_margin"
                 android:ellipsize="marquee"
+                android:textAllCaps="true"
                 android:gravity="center"
                 android:maxLines="2"
                 android:scrollHorizontally="true"
