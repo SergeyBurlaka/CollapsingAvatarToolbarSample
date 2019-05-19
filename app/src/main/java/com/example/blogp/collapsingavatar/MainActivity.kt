@@ -10,7 +10,6 @@ import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
 import android.view.View
 import android.view.animation.AnticipateOvershootInterpolator
-import android.view.animation.LinearInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 import timber.log.Timber
@@ -62,7 +61,6 @@ class MainActivity : AppCompatActivity() {
     private var animateWeigt: Float = 0F
     private var isCalculated = false
 
-    private var endChangeSize = true
     private fun updateViews(percentOffset: Float) {
         /* Collapsing avatar transparent*/
         when {
@@ -155,41 +153,22 @@ class MainActivity : AppCompatActivity() {
                     cashCollapseState = Pair(first, SWITCHED)
                 }
                 else -> {
-
+                    /* Collapse avatar img*/
                     ivAvatar.apply {
-
                         if (percentOffset > startAvatarAnimatePointY) {
 
                             val animateOffset = (percentOffset - startAvatarAnimatePointY) * animateWeigt
                             Timber.d("offset for anim $animateOffset")
                             val avatarSize = EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * animateOffset
 
-                            this.layoutParams.also { lp ->
-
-                                if (lp.height != Math.round(avatarSize) && endChangeSize) {
-                                    endChangeSize = false
-
-                                    ValueAnimator.ofInt(lp.height, Math.round(avatarSize)).apply {
-                                        addUpdateListener {
-                                            if (it.animatedValue == Math.round(avatarSize)) {
-                                                endChangeSize = true
-                                            }
-
-                                            lp.height = it.animatedValue as Int
-                                            lp.width = it.animatedValue as Int
-                                            ivAvatar.layoutParams = lp
-                                        }
-                                        interpolator =LinearInterpolator()
-                                        duration = 55
-                                        startDelay = 75
-                                        start()
-                                    }
-
+                            this.layoutParams.also {
+                                if (it.height != Math.round(avatarSize)) {
+                                    it.height = Math.round(avatarSize)
+                                    it.width = Math.round(avatarSize)
+                                    this.requestLayout()
                                 }
                             }
-
                         } else {
-
                             this.layoutParams.also {
                                 if (it.height != EXPAND_AVATAR_SIZE.toInt()) {
                                     it.height = EXPAND_AVATAR_SIZE.toInt()
@@ -201,8 +180,6 @@ class MainActivity : AppCompatActivity() {
                     }
                     cashCollapseState = Pair(first, WAIT_FOR_SWITCH)
                 }
-
-
             }
 
 

@@ -18,7 +18,7 @@
             android:layout_height="@dimen/top_head_height"
             android:background="@color/color_white"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <FrameLayout
                 android:layout_width="wrap_content"
