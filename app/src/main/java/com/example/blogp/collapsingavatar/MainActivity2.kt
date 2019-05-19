@@ -2,11 +2,14 @@ package com.example.blogp.collapsingavatar
 
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
+import android.util.TypedValue
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -145,31 +148,29 @@ class MainActivity2 : AppCompatActivity() {
                 }
             }
 
-            /* Collapse avatar img*/
-            ivUserAvatar.apply {
-                if (offset > startAvatarAnimatePointY) {
+                /* Collapse avatar img*/
+                ivUserAvatar.apply {
+                    if (offset > startAvatarAnimatePointY) {
 
-                    val animateOffset = (offset - startAvatarAnimatePointY) * animateWeigt
-                    Timber.d("offset for anim $animateOffset")
-                    val avatarSize = EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * animateOffset
+                        val animateOffset = (offset - startAvatarAnimatePointY) * animateWeigt
+                        Timber.d("offset for anim $animateOffset")
+                        val avatarSize = EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * animateOffset
 
-                    this.layoutParams.also {
-                        if(it.height!= Math.round(avatarSize)){
-                            it.height = Math.round(avatarSize)
-                            it.width = Math.round(avatarSize)
-                            this.requestLayout()
+                        this.layoutParams.also {
+                            if (it.height != Math.round(avatarSize)) {
+                                it.height = Math.round(avatarSize)
+                                it.width = Math.round(avatarSize)
+
+                            }
                         }
-                    }
+                        titleToolbarTextSingle.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset)
 
-                   // this.translationY = -(toolbar.height + appBarLayout.totalScrollRange * (1 - offset)) + avatarSize
-
-                    ((appBarLayout.width / 2f - COLLAPSE_IMAGE_SIZE / 2 - margin * 2) * animateOffset).apply {
-                        if(this!= translationX ){
+                        ((appBarLayout.width / 2f - COLLAPSE_IMAGE_SIZE / 2 - margin * 2) * animateOffset).apply {
                             translationX = this
                         }
                     }
-                }
             }
+
             //todo remove
             titleToolbarText.visibility = View.INVISIBLE
             titleToolbarTextSingle.visibility = View.INVISIBLE
