@@ -19,7 +19,7 @@
             android:layout_height="@dimen/top_head_height"
             android:background="@color/color_white"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -54,16 +54,18 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center"
-                    android:text="Christian Bale"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:visibility="gone" />
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:text="Christian Bale"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imgb_avatar_wrap"
@@ -72,7 +74,7 @@
                     android:layout_gravity="bottom|center_horizontal"
                     android:padding="@dimen/item_decoration"
                     android:src="@drawable/avatar_img"
-                    app:civ_border_width="2dp"
+                    app:civ_border_width="3dp"
                     app:civ_border_color="@color/color_white"
                    />
 
@@ -86,11 +88,31 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:text="Christian Bale"
+                android:fontFamily="monospace"
+                android:textColor="@color/color_white"
+                android:textSize="17sp"
+                android:textAllCaps="true"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                app:layout_collapseMode="pin"
+                tools:visibility="visible" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_workaround"
+                android:layout_width="wrap_content"
+                android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="center_horizontal"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Christian Bale"
+                android:textAllCaps="true"
                 android:textColor="@color/color_white"
                 android:textSize="17sp"
                 android:visibility="invisible"
                 app:layout_collapseMode="pin"
-                tools:visibility="visible" />
+                tools:visibility="invisible" />
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_profile_name"
@@ -101,6 +123,8 @@
                 android:ellipsize="marquee"
                 android:gravity="center"
                 android:maxLines="2"
+                android:fontFamily="monospace"
+                android:textAllCaps="true"
                 android:scrollHorizontally="true"
                 android:text=" Christian Charles\n Philip Bale"
                 android:textColor="@color/color_white"
