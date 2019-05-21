@@ -156,5 +156,5 @@ class MainActivity : AppCompatActivity() {
         const val SWITCHED = 1
     }
 
-    private val mUpperLimitTransparently = ABROAD * 0.67
+    private val mUpperLimitTransparently = ABROAD * 0.35
 }

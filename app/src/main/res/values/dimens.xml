@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="activity_margin">32dp</dimen>
+    <dimen name="activity_margin">24dp</dimen>
     <dimen name="item_decoration">8dp</dimen>
 
     <dimen name="main_screen_top_title_width">200dp</dimen>
 
-    <dimen name="top_head_height">280dp</dimen>
-    <dimen name="top_head_background_height">220dp</dimen>
+    <dimen name="top_head_height">220dp</dimen>
+    <dimen name="top_head_background_height">160dp</dimen>
 
     <dimen name="default_collapsed_image_size">55dp</dimen>
-    <dimen name="default_expanded_image_size">120dp</dimen>
+    <dimen name="default_expanded_image_size">135dp</dimen>
 
     <dimen name="default_collapsed_text_size">4dp</dimen>
     <dimen name="default_expanded_text_size">11dp</dimen>
