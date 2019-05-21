@@ -1,176 +1,160 @@
-/*
 package com.example.blogp.collapsingavatar
 
 
-import android.animation.ValueAnimator
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
+import android.util.TypedValue
 import android.view.View
-import android.view.animation.AnticipateOvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.ImageView
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var avatarContainerView: ImageView
-    private var expandedImageSize: Float = 0F
-    private var collapsedImageSize: Float = 0F
+    private lateinit var ivUserAvatar: ImageView
+    private var EXPAND_AVATAR_SIZE: Float = 0F
+    private var COLLAPSE_IMAGE_SIZE: Float = 0F
     private var margin: Float = 0F
     private lateinit var toolbar: Toolbar
     private lateinit var appBarLayout: AppBarLayout
     private var cashCollapseState: Pair<Int, Int>? = null
     private lateinit var titleToolbarText: AppCompatTextView
     private lateinit var titleToolbarTextSingle: AppCompatTextView
-    private lateinit var collapsingAvatarContainer: FrameLayout
+    private lateinit var tvWorkAround: AppCompatTextView
+    /*   private lateinit var collapsingAvatarContainer: FrameLayout*/
     private lateinit var background: FrameLayout
+    /**/
+    private var startPointY: Float = 0F
+    private var animWeigt: Float = 0F
+    private var isCalculated = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        */
-/**//*
-
-        expandedImageSize = resources.getDimension(R.dimen.default_expanded_image_size)
-        collapsedImageSize = resources.getDimension(R.dimen.default_collapsed_image_size)
+        /**/
+        EXPAND_AVATAR_SIZE = resources.getDimension(R.dimen.default_expanded_image_size)
+        COLLAPSE_IMAGE_SIZE = resources.getDimension(R.dimen.default_collapsed_image_size)
         margin = resources.getDimension(R.dimen.item_decoration)
-        collapsingAvatarContainer = findViewById(R.id.stuff_container)
+        /* collapsingAvatarContainer = findViewById(R.id.stuff_container)*/
         appBarLayout = findViewById(R.id.app_bar_layout)
         toolbar = findViewById(R.id.anim_toolbar)
         toolbar.visibility = View.INVISIBLE
-        avatarContainerView = findViewById(R.id.imgb_avatar_wrap)
+        ivUserAvatar = findViewById(R.id.imgb_avatar_wrap)
         titleToolbarText = findViewById(R.id.tv_profile_name)
         titleToolbarTextSingle = findViewById(R.id.tv_profile_name_single)
         background = findViewById(R.id.fl_background)
-        */
-/**//*
-
+        tvWorkAround = findViewById(R.id.tv_workaround)
+        /**/
         appBarLayout.addOnOffsetChangedListener(
                 AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
-                    val offset = Math.abs(i / appBarLayout.totalScrollRange.toFloat())
-                    updateViews(offset)
+                    if (isCalculated.not()) {
+                        startPointY = Math.abs((appBarLayout.height - EXPAND_AVATAR_SIZE) / appBarLayout.totalScrollRange)
+                        animWeigt = 1 / (1 - startPointY)
+                        isCalculated = true
+                    }
+                    /**/
+                    updateViews(Math.abs(i / appBarLayout.totalScrollRange.toFloat()))
                 })
     }
 
-    private fun updateViews(percentOffset: Float) {
-        */
-/* Collapsing avatar transparent*//*
-
+    private fun updateViews(offset: Float) {
+        /* Switch transparent*/
         when {
-            percentOffset > mUpperLimitTransparently && percentOffset < ABROAD -> {
-                avatarContainerView.alpha = 0.0f
-                titleToolbarText.alpha = 1 - percentOffset
+            offset > mUpperLimitTransparently -> {
+                titleToolbarText.alpha = (0F)
             }
 
-            percentOffset > mLowerLimitTransparently && percentOffset < mUpperLimitTransparently -> {
-                avatarContainerView.alpha = 1 - percentOffset
-                titleToolbarText.alpha = 1f
+            else -> {
+                titleToolbarText.alpha = (1f)
+                ivUserAvatar.alpha = 1f
             }
-
-            else -> avatarContainerView.alpha = 1f
         }
-        */
-/*Collapsed/expended sizes for views*//*
 
+        /** collapse -expand switch*/
         val result: Pair<Int, Int> = when {
-            percentOffset < ABROAD -> {
-                Pair(TO_EXPANDED_STATE, cashCollapseState?.second
+            offset < ABROAD -> {
+                Pair(TO_EXPANDED, cashCollapseState?.second
                         ?: WAIT_FOR_SWITCH)
             }
             else -> {
-                Pair(TO_COLLAPSED_STATE, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
+                Pair(TO_COLLAPSED, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
             }
         }
         result.apply {
-            var translationY = 0f
-            var headContainerHeight = 0f
-            val translationX: Float
-            var currentImageSize = 0
             when {
                 cashCollapseState != null && cashCollapseState != this -> {
                     when (first) {
-                        TO_EXPANDED_STATE -> {
-                            translationY = toolbar.height.toFloat()
-                            headContainerHeight = appBarLayout.totalScrollRange.toFloat()
-                            currentImageSize = expandedImageSize.toInt()
-                            avatarContainerView.translationX = 0F
+                        TO_EXPANDED -> {
+                            /* set avatar on start position (center of parent frame layout)*/
+                            ivUserAvatar.translationX = 0F
+                            /**/
+                            background.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.color_transparent))
+                            /* hide top titles on toolbar*/
                             titleToolbarText.visibility = View.VISIBLE
                             titleToolbarTextSingle.visibility = View.INVISIBLE
-                            background.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.color_transparent))
                         }
-
-                        TO_COLLAPSED_STATE -> {
-                            background.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
-                            currentImageSize = collapsedImageSize.toInt()
-                            translationY = appBarLayout.totalScrollRange.toFloat()
-                            headContainerHeight = toolbar.height.toFloat()
-                            translationX = appBarLayout.width / 2f - collapsedImageSize / 2 - margin * 2
-                            */
-/**//*
-
-                            ValueAnimator.ofFloat(avatarContainerView.translationX, translationX).apply {
-                                addUpdateListener {
-                                    if (cashCollapseState!!.first == TO_COLLAPSED_STATE) {
-                                        avatarContainerView.translationX = it.animatedValue as Float
-                                    }
-                                }
-                                interpolator = AnticipateOvershootInterpolator()
-                                startDelay = 75
-                                duration = 400
-                                start()
+                        TO_COLLAPSED -> {
+                            /**/
+                            background.apply {
+                                alpha = 0F
+                                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
+                                animate().setDuration(1000).alpha(1.0F)
                             }
-                            */
-/**//*
-
-                            titleToolbarText.visibility = View.INVISIBLE
+                            /* show titles on toolbar with animation*/
                             titleToolbarTextSingle.apply {
                                 visibility = View.VISIBLE
-                                alpha = 0.3f
-                                this.translationX = width.toFloat() / 2
-                                animate().translationX(0f)
-                                        .setInterpolator(AnticipateOvershootInterpolator())
+                                alpha = 0F
+                                animate()
+                                        .setDuration(500)
                                         .alpha(1.0f)
-                                        .setStartDelay(75)
-                                        .setDuration(400)
-                                        .setListener(null)
                             }
                         }
                     }
-
-                    avatarContainerView.apply {
-                        layoutParams.height = currentImageSize
-                        layoutParams.width = currentImageSize
-                    }
-                    collapsingAvatarContainer.apply {
-                        layoutParams.height = headContainerHeight.toInt()
-                        this.translationY = translationY
-                        requestLayout()
-                    }
-
-                    */
-/**//*
-
                     cashCollapseState = Pair(first, SWITCHED)
                 }
                 else -> {
                     cashCollapseState = Pair(first, WAIT_FOR_SWITCH)
                 }
             }
+
+            /* Collapse avatar img*/
+            ivUserAvatar.apply {
+                when {
+                    offset > startPointY -> {
+                        val animOffset = (offset - startPointY) * animWeigt
+                        val avatarSize = EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * animOffset
+                        this.layoutParams.also {
+                            it.height = Math.round(avatarSize)
+                            it.width = Math.round(avatarSize)
+                        }
+                        tvWorkAround.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset)
+
+                        this.translationX = ((appBarLayout.width / 2f - margin * 2 - (EXPAND_AVATAR_SIZE - avatarSize) / 2) * animOffset)
+                        this.translationY = (-(toolbar.height + appBarLayout.totalScrollRange - avatarSize) * (1 - offset) * 0.1).toFloat()
+                    }
+                    else -> this.layoutParams.also {
+                        if (it.height != EXPAND_AVATAR_SIZE.toInt()) {
+                            it.height = EXPAND_AVATAR_SIZE.toInt()
+                            it.width = EXPAND_AVATAR_SIZE.toInt()
+                            this.layoutParams = it
+                        }
+                        translationX = 0f
+                    }
+                }
+            }
         }
     }
 
     companion object {
-        const val ABROAD = 0.99f
-        const val TO_EXPANDED_STATE = 0
-        const val TO_COLLAPSED_STATE = 1
+        const val ABROAD = 0.75f
+        const val TO_EXPANDED = 0
+        const val TO_COLLAPSED = 1
         const val WAIT_FOR_SWITCH = 0
         const val SWITCHED = 1
     }
 
-    private val mLowerLimitTransparently = ABROAD * 0.45
-    private val mUpperLimitTransparently = ABROAD * 0.65
+    private val mUpperLimitTransparently = ABROAD * 0.67
 }
-*/
