@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         /**/
         EXPAND_AVATAR_SIZE = resources.getDimension(R.dimen.default_expanded_image_size)
         COLLAPSE_IMAGE_SIZE = resources.getDimension(R.dimen.default_collapsed_image_size)
-        margin = resources.getDimension(R.dimen.item_decoration)
+        margin = resources.getDimension(R.dimen.activity_margin)
         /* collapsingAvatarContainer = findViewById(R.id.stuff_container)*/
         appBarLayout = findViewById(R.id.app_bar_layout)
         toolbar = findViewById(R.id.anim_toolbar)
@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                         tvWorkAround.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset)
 
                         this.translationX = ((appBarLayout.width / 2f - margin * 2 - (EXPAND_AVATAR_SIZE - avatarSize) / 2) * animOffset)
-                        this.translationY = (-(toolbar.height + appBarLayout.totalScrollRange - avatarSize) * (1 - offset) * 0.1).toFloat()
+                       // this.translationY = (-(toolbar.height + appBarLayout.totalScrollRange - avatarSize) * (1 - offset) * 0.1).toFloat()
                     }
                     else -> this.layoutParams.also {
                         if (it.height != EXPAND_AVATAR_SIZE.toInt()) {
