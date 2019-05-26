@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private var cashCollapseState: Pair<Int, Int>? = null
     private lateinit var titleToolbarText: AppCompatTextView
     private lateinit var titleToolbarTextSingle: AppCompatTextView
-    private lateinit var tvWorkAround: AppCompatTextView
+    private lateinit var invisibleTextViewWorkAround: AppCompatTextView
     /*   private lateinit var collapsingAvatarContainer: FrameLayout*/
     private lateinit var background: FrameLayout
     /**/
@@ -46,12 +46,12 @@ class MainActivity : AppCompatActivity() {
         titleToolbarText = findViewById(R.id.tv_profile_name)
         titleToolbarTextSingle = findViewById(R.id.tv_profile_name_single)
         background = findViewById(R.id.fl_background)
-        tvWorkAround = findViewById(R.id.tv_workaround)
+        invisibleTextViewWorkAround = findViewById(R.id.tv_workaround)
         /**/
         appBarLayout.addOnOffsetChangedListener(
                 AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
                     if (isCalculated.not()) {
-                        startPointY = Math.abs((appBarLayout.height - EXPAND_AVATAR_SIZE) / appBarLayout.totalScrollRange)
+                        startPointY = Math.abs((appBarLayout.height - (EXPAND_AVATAR_SIZE + margin)) / appBarLayout.totalScrollRange)
                         animWeigt = 1 / (1 - startPointY)
                         isCalculated = true
                     }
@@ -122,15 +122,28 @@ class MainActivity : AppCompatActivity() {
 
             /* Collapse avatar img*/
             ivUserAvatar.apply {
-                        val avatarSize = EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * offset
+                when {
+                    offset > startPointY -> {
+                        val animOffset = (offset - startPointY) * animWeigt
+                        val avatarSize = EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * animOffset
                         this.layoutParams.also {
                             it.height = Math.round(avatarSize)
                             it.width = Math.round(avatarSize)
                         }
-                        tvWorkAround.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset)
+                        invisibleTextViewWorkAround.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset)
 
-                        this.translationX = ((appBarLayout.width -avatarSize)/2f) * offset
-                        this.translationY = - ((toolbar.height/2 - avatarSize )/2f) * offset
+                        this.translationX = (appBarLayout.width - margin - avatarSize) / 2 * animOffset
+                        this.translationY = ((toolbar.height - avatarSize) - (toolbar.height - COLLAPSE_IMAGE_SIZE) * 2) / 2 * animOffset
+                    }
+                    else -> this.layoutParams.also {
+                        if (it.height != EXPAND_AVATAR_SIZE.toInt()) {
+                            it.height = EXPAND_AVATAR_SIZE.toInt()
+                            it.width = EXPAND_AVATAR_SIZE.toInt()
+                            this.layoutParams = it
+                        }
+                        translationX = 0f
+                    }
+                }
             }
         }
     }
