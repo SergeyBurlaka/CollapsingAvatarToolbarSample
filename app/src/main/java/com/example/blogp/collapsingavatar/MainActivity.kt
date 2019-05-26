@@ -122,28 +122,15 @@ class MainActivity : AppCompatActivity() {
 
             /* Collapse avatar img*/
             ivUserAvatar.apply {
-                when {
-                    offset > startPointY -> {
-                        val animOffset = (offset - startPointY) * animWeigt
-                        val avatarSize = EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * animOffset
+                        val avatarSize = EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * offset
                         this.layoutParams.also {
                             it.height = Math.round(avatarSize)
                             it.width = Math.round(avatarSize)
                         }
                         tvWorkAround.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset)
 
-                        this.translationX = ((appBarLayout.width / 2f /*- margin * 2*/ - (EXPAND_AVATAR_SIZE - avatarSize) / 2) * animOffset)
-                       // this.translationY = (-(toolbar.height + appBarLayout.totalScrollRange - avatarSize) * (1 - offset) * 0.1).toFloat()
-                    }
-                    else -> this.layoutParams.also {
-                        if (it.height != EXPAND_AVATAR_SIZE.toInt()) {
-                            it.height = EXPAND_AVATAR_SIZE.toInt()
-                            it.width = EXPAND_AVATAR_SIZE.toInt()
-                            this.layoutParams = it
-                        }
-                        translationX = 0f
-                    }
-                }
+                        this.translationX = ((appBarLayout.width -avatarSize)/2f) * offset
+                        this.translationY = - ((toolbar.height/2 - avatarSize )/2f) * offset
             }
         }
     }
