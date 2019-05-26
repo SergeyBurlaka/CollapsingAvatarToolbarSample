@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         tvWorkAround.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset)
 
-                        this.translationX = ((appBarLayout.width / 2f - margin * 2 - (EXPAND_AVATAR_SIZE - avatarSize) / 2) * animOffset)
+                        this.translationX = ((appBarLayout.width / 2f /*- margin * 2*/ - (EXPAND_AVATAR_SIZE - avatarSize) / 2) * animOffset)
                        // this.translationY = (-(toolbar.height + appBarLayout.totalScrollRange - avatarSize) * (1 - offset) * 0.1).toFloat()
                     }
                     else -> this.layoutParams.also {
@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val ABROAD = 0.75f
+        const val ABROAD = 0.95f
         const val TO_EXPANDED = 0
         const val TO_COLLAPSED = 1
         const val WAIT_FOR_SWITCH = 0
