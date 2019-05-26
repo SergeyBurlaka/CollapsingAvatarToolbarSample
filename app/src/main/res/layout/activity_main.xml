@@ -75,7 +75,7 @@
                     android:layout_width="@dimen/default_expanded_image_size"
                     android:layout_height="@dimen/default_expanded_image_size"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:padding="@dimen/item_decoration"
+                    app:civ_border_color="@color/color_white"
                     android:src="@drawable/avatar_img"
                    />
 
@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/activity_margin"
+                android:layout_margin="@dimen/avatar_margin"
                 android:ellipsize="marquee"
                 android:textAllCaps="true"
                 android:gravity="center"
@@ -128,9 +128,9 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_margin"
+            android:layout_marginStart="@dimen/avatar_margin"
             android:layout_marginTop="32dp"
-            android:layout_marginEnd="@dimen/activity_margin"
+            android:layout_marginEnd="@dimen/avatar_margin"
             android:layout_marginBottom="8dp"
             app:cardElevation="8dp"
             app:contentPadding="16dp">

@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         /**/
         EXPAND_AVATAR_SIZE = resources.getDimension(R.dimen.default_expanded_image_size)
         COLLAPSE_IMAGE_SIZE = resources.getDimension(R.dimen.default_collapsed_image_size)
-        margin = resources.getDimension(R.dimen.item_decoration)
+        margin = resources.getDimension(R.dimen.avatar_margin)
         collapsingAvatarContainer = findViewById(R.id.stuff_container)
         appBarLayout = findViewById(R.id.app_bar_layout)
         toolbar = findViewById(R.id.anim_toolbar)
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         appBarLayout.addOnOffsetChangedListener(
                 AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
                     if (isCalculated.not()) {
-                        startAvatarAnimatePointY = Math.abs((appBarLayout.height - EXPAND_AVATAR_SIZE) / appBarLayout.totalScrollRange)
+                        startAvatarAnimatePointY = Math.abs((appBarLayout.height - EXPAND_AVATAR_SIZE - toolbar.height / 2) / appBarLayout.totalScrollRange)
                         animateWeigt = 1 / (1 - startAvatarAnimatePointY)
                         isCalculated = true
                     }
@@ -97,7 +97,6 @@ class MainActivity : AppCompatActivity() {
                             translationY = toolbar.height.toFloat()
                             headContainerHeight = appBarLayout.totalScrollRange.toFloat()
                             currentImageSize = EXPAND_AVATAR_SIZE.toInt()
-
                             /**/
                             titleToolbarText.visibility = View.VISIBLE
                             titleToolbarTextSingle.visibility = View.INVISIBLE
@@ -109,10 +108,9 @@ class MainActivity : AppCompatActivity() {
                         TO_COLLAPSED_STATE -> {
                             background.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
                             currentImageSize = COLLAPSE_IMAGE_SIZE.toInt()
-                            translationY = appBarLayout.totalScrollRange.toFloat()
+                            translationY = appBarLayout.totalScrollRange.toFloat() - (toolbar.height - COLLAPSE_IMAGE_SIZE) / 2
                             headContainerHeight = toolbar.height.toFloat()
                             translationX = appBarLayout.width / 2f - COLLAPSE_IMAGE_SIZE / 2 - margin * 2
-
                             /**/
                             ValueAnimator.ofFloat(ivAvatar.translationX, translationX).apply {
                                 addUpdateListener {
@@ -121,7 +119,8 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
                                 interpolator = AnticipateOvershootInterpolator()
-                                startDelay = 75
+                                startDelay = 69
+                                duration = 350
                                 start()
                             }
                             /**/
@@ -133,7 +132,8 @@ class MainActivity : AppCompatActivity() {
                                 animate().translationX(0f)
                                         .setInterpolator(AnticipateOvershootInterpolator())
                                         .alpha(1.0f)
-                                        .setStartDelay(75)
+                                        .setStartDelay(69)
+                                        .setDuration(450)
                                         .setListener(null)
                             }
                         }
@@ -148,7 +148,6 @@ class MainActivity : AppCompatActivity() {
                         this.translationY = translationY
                         requestLayout()
                     }
-
                     /**/
                     cashCollapseState = Pair(first, SWITCHED)
                 }
@@ -168,6 +167,9 @@ class MainActivity : AppCompatActivity() {
                                     this.requestLayout()
                                 }
                             }
+
+                            this.translationY = (COLLAPSE_IMAGE_SIZE - avatarSize) * animateOffset
+
                         } else {
                             this.layoutParams.also {
                                 if (it.height != EXPAND_AVATAR_SIZE.toInt()) {
