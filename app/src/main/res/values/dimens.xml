@@ -9,7 +9,7 @@
     <dimen name="top_head_height">220dp</dimen>
     <dimen name="top_head_background_height">160dp</dimen>
 
-    <dimen name="default_collapsed_image_size">55dp</dimen>
+    <dimen name="default_collapsed_image_size">45dp</dimen>
     <dimen name="default_expanded_image_size">135dp</dimen>
 
     <dimen name="default_collapsed_text_size">4dp</dimen>

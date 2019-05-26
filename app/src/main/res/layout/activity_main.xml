@@ -19,7 +19,7 @@
             android:layout_height="@dimen/top_head_height"
             android:background="@color/color_white"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -72,7 +72,6 @@
                     android:layout_width="@dimen/default_expanded_image_size"
                     android:layout_height="@dimen/default_expanded_image_size"
                     android:layout_gravity="bottom|center_horizontal"
-                    android:padding="@dimen/item_decoration"
                     android:src="@drawable/avatar_img"
                     app:civ_border_width="1.5dp"
                     app:civ_border_color="@color/color_white"
