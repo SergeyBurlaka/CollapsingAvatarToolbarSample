@@ -6,5 +6,8 @@
 
     <color name="color_white">#ffffff</color>
     <color name="background_Image_tint">#C15A0A0D</color>
+
+    <color name="color_gray_green">#574430</color>
+    <color name="background_green_image_tint">#61574430</color>
     <color name="color_transparent">#00FFFFFF</color>
 </resources>

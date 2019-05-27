@@ -1,6 +1,7 @@
 package com.example.blogp.collapsingavatar
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.v4.content.ContextCompat
@@ -9,11 +10,12 @@ import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.Toolbar
 import android.util.TypedValue
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 
 
-class MainActivity : AppCompatActivity() {
+class Demo1Activity : AppCompatActivity() {
     private lateinit var ivUserAvatar: ImageView
     private var EXPAND_AVATAR_SIZE: Float = 0F
     private var COLLAPSE_IMAGE_SIZE: Float = 0F
@@ -33,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_demo_1)
         /**/
         EXPAND_AVATAR_SIZE = resources.getDimension(R.dimen.default_expanded_image_size)
         COLLAPSE_IMAGE_SIZE = resources.getDimension(R.dimen.default_collapsed_image_size)
@@ -58,6 +60,9 @@ class MainActivity : AppCompatActivity() {
                     /**/
                     updateViews(Math.abs(i / appBarLayout.totalScrollRange.toFloat()))
                 })
+        findViewById<Button>(R.id.b_go_demo_2).setOnClickListener {
+            startActivity(Intent(this@Demo1Activity, Demo2Activity::class.java))
+        }
     }
 
     private fun updateViews(offset: Float) {
@@ -91,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                             /* set avatar on start position (center of parent frame layout)*/
                             ivUserAvatar.translationX = 0F
                             /**/
-                            background.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.color_transparent))
+                            background.setBackgroundColor(ContextCompat.getColor(this@Demo1Activity, R.color.color_transparent))
                             /* hide top titles on toolbar*/
                             titleToolbarText.visibility = View.VISIBLE
                             titleToolbarTextSingle.visibility = View.INVISIBLE
@@ -100,7 +105,7 @@ class MainActivity : AppCompatActivity() {
                             /**/
                             background.apply {
                                 alpha = 0F
-                                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
+                                setBackgroundColor(ContextCompat.getColor(this@Demo1Activity, R.color.colorPrimary))
                                 animate().setDuration(1000).alpha(1.0F)
                             }
                             /* show titles on toolbar with animation*/
