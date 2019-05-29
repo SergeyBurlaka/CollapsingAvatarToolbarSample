@@ -103,17 +103,11 @@ class MainActivity : AppCompatActivity() {
             when {
                 cashCollapseState != null && cashCollapseState != this -> {
                     when (first) {
-                        TO_EXPANDED -> {
-                            /**/
-                            background.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.color_transparent))
-                        }
-                        TO_COLLAPSED -> {
-                            /**/
-                            background.apply {
-                                alpha = 0F
-                                setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
-                                animate().setDuration(400).alpha(1.0F)
-                            }
+                        TO_EXPANDED -> background.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.color_transparent))
+                        TO_COLLAPSED -> background.apply {
+                            alpha = 0F
+                            setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
+                            animate().setDuration(250).alpha(1.0F)
                         }
                     }
                     cashCollapseState = Pair(first, SWITCHED)
