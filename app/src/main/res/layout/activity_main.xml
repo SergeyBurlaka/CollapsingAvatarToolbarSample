@@ -25,34 +25,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_collapseMode="parallax">
-            <ImageView
-                android:id="@+id/main.imageview.placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/top_head_background_height"
-                android:scaleType="fitXY"
-                android:src="@drawable/background_img"
-               />
+
+                <ImageView
+                    android:id="@+id/main.imageview.placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/top_head_background_height"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/background_img" />
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/background_Image_tint"
-                    />
+                    android:background="@color/background_Image_tint" />
             </FrameLayout>
-
-            <FrameLayout
-                android:id="@+id/fl_background"
-                android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.7"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/anim_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:visibility="invisible"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+            <FrameLayout
+                android:id="@+id/fl_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:layout_collapseMode="parallax" />
 
             <TextView
                 android:id="@+id/title"
@@ -67,30 +67,20 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imgb_avatar_wrap"
-                    android:layout_width="@dimen/default_expanded_image_size"
-                    android:layout_height="@dimen/default_expanded_image_size"
-                    android:layout_gravity="bottom|center_horizontal"
-                    android:src="@drawable/avatar_img"
-                    app:civ_border_width="1.5dp"
-                    app:civ_border_color="@color/color_white"
-                   />
-
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_profile_name_single"
                 android:layout_width="wrap_content"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="center_horizontal"
                 android:ellipsize="end"
+                android:fontFamily="monospace"
                 android:gravity="center"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:text="Christian Bale"
-                android:fontFamily="monospace"
+                android:textAllCaps="true"
                 android:textColor="@color/color_white"
                 android:textSize="17sp"
-                android:textAllCaps="true"
                 android:textStyle="bold"
                 android:visibility="invisible"
                 app:layout_collapseMode="pin"
@@ -120,16 +110,26 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/activity_margin"
                 android:ellipsize="marquee"
+                android:fontFamily="monospace"
                 android:gravity="center"
                 android:maxLines="2"
-                android:fontFamily="monospace"
-                android:textAllCaps="true"
                 android:scrollHorizontally="true"
                 android:text=" Christian Charles\n Philip Bale"
+                android:textAllCaps="true"
                 android:textColor="@color/color_white"
                 android:textSize="24sp"
-                app:layout_collapseMode="pin"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.7"
                 tools:visibility="visible" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgb_avatar_wrap"
+                android:layout_width="@dimen/default_expanded_image_size"
+                android:layout_height="@dimen/default_expanded_image_size"
+                android:layout_gravity="bottom|center_horizontal"
+                android:src="@drawable/avatar_img"
+                app:civ_border_color="@color/color_white"
+                app:civ_border_width="1.5dp" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
         /* collapsingAvatarContainer = findViewById(R.id.stuff_container)*/
         appBarLayout = findViewById(R.id.app_bar_layout)
         toolbar = findViewById(R.id.anim_toolbar)
-        toolbar.visibility = View.INVISIBLE
         ivUserAvatar = findViewById(R.id.imgb_avatar_wrap)
         titleToolbarText = findViewById(R.id.tv_profile_name)
         titleToolbarTextSingle = findViewById(R.id.tv_profile_name_single)
@@ -61,55 +60,59 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateViews(offset: Float) {
-        /* Switch transparent*/
-        when {
-            offset > mUpperLimitTransparently -> {
-                titleToolbarText.alpha = (0F)
+        /* apply levels changes*/
+        when (offset) {
+            in FORTH_LEVEL..1F -> {
+                titleToolbarTextSingle.alpha = 1F
             }
 
-            else -> {
+            in THIRD_LEVEL..FORTH_LEVEL -> {
+                titleToolbarTextSingle.apply {
+                    if (visibility != View.VISIBLE) visibility = View.VISIBLE
+                    alpha = offset * 0.5F
+                }
+            }
+
+            in SECOND_LEVEL..THIRD_LEVEL -> {
+                titleToolbarTextSingle.apply {
+                    if (visibility != View.INVISIBLE) visibility = View.INVISIBLE
+                }
+                titleToolbarText.apply {
+                    if (visibility != View.INVISIBLE) visibility = View.INVISIBLE
+                }
+            }
+
+            in FIRST_LEVEL..SECOND_LEVEL -> {
+                titleToolbarText.apply {
+                    if (visibility != View.VISIBLE) visibility = View.VISIBLE
+                    alpha = (1 - offset) * 0.5F
+                }
+            }
+
+            in 0F..FIRST_LEVEL -> {
                 titleToolbarText.alpha = (1f)
                 ivUserAvatar.alpha = 1f
             }
         }
 
-        /** collapse -expand switch*/
-        val result: Pair<Int, Int> = when {
-            offset < ABROAD -> {
-                Pair(TO_EXPANDED, cashCollapseState?.second
-                        ?: WAIT_FOR_SWITCH)
-            }
-            else -> {
-                Pair(TO_COLLAPSED, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
-            }
-        }
-        result.apply {
+        /** collapse - expand switch*/
+        when {
+            offset < SWITCH_BOUND -> Pair(TO_EXPANDED, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
+            else -> Pair(TO_COLLAPSED, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
+        }.apply {
             when {
                 cashCollapseState != null && cashCollapseState != this -> {
                     when (first) {
                         TO_EXPANDED -> {
-                            /* set avatar on start position (center of parent frame layout)*/
-                            ivUserAvatar.translationX = 0F
                             /**/
                             background.setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.color_transparent))
-                            /* hide top titles on toolbar*/
-                            titleToolbarText.visibility = View.VISIBLE
-                            titleToolbarTextSingle.visibility = View.INVISIBLE
                         }
                         TO_COLLAPSED -> {
                             /**/
                             background.apply {
                                 alpha = 0F
                                 setBackgroundColor(ContextCompat.getColor(this@MainActivity, R.color.colorPrimary))
-                                animate().setDuration(1000).alpha(1.0F)
-                            }
-                            /* show titles on toolbar with animation*/
-                            titleToolbarTextSingle.apply {
-                                visibility = View.VISIBLE
-                                alpha = 0F
-                                animate()
-                                        .setDuration(500)
-                                        .alpha(1.0f)
+                                animate().setDuration(400).alpha(1.0F)
                             }
                         }
                     }
@@ -149,12 +152,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val ABROAD = 0.95f
+        const val SWITCH_BOUND = 0.9f
+        const val FORTH_LEVEL = 0.9F
+        const val THIRD_LEVEL = 0.77F
+        const val SECOND_LEVEL = 0.41F
+        const val FIRST_LEVEL = 0.15F
+
         const val TO_EXPANDED = 0
         const val TO_COLLAPSED = 1
         const val WAIT_FOR_SWITCH = 0
         const val SWITCHED = 1
     }
 
-    private val mUpperLimitTransparently = ABROAD * 0.35
 }
