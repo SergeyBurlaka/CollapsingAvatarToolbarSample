@@ -51,8 +51,7 @@
                 android:id="@+id/fl_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax" />
+              />
 
             <TextView
                 android:id="@+id/title"
@@ -118,8 +117,6 @@
                 android:textAllCaps="true"
                 android:textColor="@color/color_white"
                 android:textSize="24sp"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.7"
                 tools:visibility="visible" />
 
             <de.hdodenhof.circleimageview.CircleImageView
