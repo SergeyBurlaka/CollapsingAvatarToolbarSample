@@ -43,7 +43,6 @@ class Demo1Activity : AppCompatActivity() {
         /* collapsingAvatarContainer = findViewById(R.id.stuff_container)*/
         appBarLayout = findViewById(R.id.app_bar_layout)
         toolbar = findViewById(R.id.anim_toolbar)
-        toolbar.visibility = View.INVISIBLE
         ivUserAvatar = findViewById(R.id.imgb_avatar_wrap)
         titleToolbarText = findViewById(R.id.tv_profile_name)
         titleToolbarTextSingle = findViewById(R.id.tv_profile_name_single)
@@ -66,48 +65,27 @@ class Demo1Activity : AppCompatActivity() {
     }
 
     private fun updateViews(offset: Float) {
-        /* Switch transparent*/
+        /** collapse - expand switch*/
         when {
-            offset > mUpperLimitTransparently -> {
-                titleToolbarText.alpha = (0F)
-            }
-
-            else -> {
-                titleToolbarText.alpha = (1f)
-                ivUserAvatar.alpha = 1f
-            }
-        }
-
-        /** collapse -expand switch*/
-        val result: Pair<Int, Int> = when {
-            offset < ABROAD -> {
-                Pair(TO_EXPANDED, cashCollapseState?.second
-                        ?: WAIT_FOR_SWITCH)
-            }
-            else -> {
-                Pair(TO_COLLAPSED, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
-            }
-        }
-        result.apply {
+            offset < SWITCH_BOUND -> Pair(TO_EXPANDED, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
+            else -> Pair(TO_COLLAPSED, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
+        }.apply {
             when {
                 cashCollapseState != null && cashCollapseState != this -> {
                     when (first) {
-                        TO_EXPANDED -> {
+                        TO_EXPANDED ->  {
                             /* set avatar on start position (center of parent frame layout)*/
                             ivUserAvatar.translationX = 0F
                             /**/
                             background.setBackgroundColor(ContextCompat.getColor(this@Demo1Activity, R.color.color_transparent))
                             /* hide top titles on toolbar*/
-                            titleToolbarText.visibility = View.VISIBLE
                             titleToolbarTextSingle.visibility = View.INVISIBLE
                         }
-                        TO_COLLAPSED -> {
-                            /**/
-                            background.apply {
-                                alpha = 0F
-                                setBackgroundColor(ContextCompat.getColor(this@Demo1Activity, R.color.colorPrimary))
-                                animate().setDuration(1000).alpha(1.0F)
-                            }
+                        TO_COLLAPSED -> background.apply {
+                            alpha = 0F
+                            setBackgroundColor(ContextCompat.getColor(this@Demo1Activity, R.color.colorPrimary))
+                            animate().setDuration(250).alpha(1.0F)
+
                             /* show titles on toolbar with animation*/
                             titleToolbarTextSingle.apply {
                                 visibility = View.VISIBLE
@@ -154,12 +132,11 @@ class Demo1Activity : AppCompatActivity() {
     }
 
     companion object {
-        const val ABROAD = 0.85f
+        const val SWITCH_BOUND = 0.8f
         const val TO_EXPANDED = 0
         const val TO_COLLAPSED = 1
         const val WAIT_FOR_SWITCH = 0
         const val SWITCHED = 1
     }
 
-    private val mUpperLimitTransparently = ABROAD * 0.35
 }
