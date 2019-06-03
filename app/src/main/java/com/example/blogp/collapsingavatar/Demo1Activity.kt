@@ -154,7 +154,7 @@ class Demo1Activity : AppCompatActivity() {
     }
 
     companion object {
-        const val ABROAD = 0.95f
+        const val ABROAD = 0.85f
         const val TO_EXPANDED = 0
         const val TO_COLLAPSED = 1
         const val WAIT_FOR_SWITCH = 0
