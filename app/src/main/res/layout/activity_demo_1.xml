@@ -54,19 +54,6 @@
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="monospace"
-                android:gravity="center"
-                android:text="Christian Bale"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
-
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgb_avatar_wrap"
                 android:layout_width="@dimen/default_expanded_image_size"
@@ -86,7 +73,7 @@
                 android:gravity="center"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="Christian Bale"
+                android:text="@string/christian_bale"
                 android:textAllCaps="true"
                 android:textColor="@color/color_white"
                 android:textSize="17sp"
@@ -104,7 +91,7 @@
                 android:gravity="center"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:text="Christian Bale"
+                android:text="@string/christian_bale"
                 android:textAllCaps="true"
                 android:textColor="@color/color_white"
                 android:textSize="17sp"
@@ -123,11 +110,10 @@
                 android:gravity="center"
                 android:maxLines="2"
                 android:scrollHorizontally="true"
-                android:text=" Christian Charles\n Philip Bale"
+                android:text="@string/christian_charles_n_philip_bale"
                 android:textAllCaps="true"
                 android:textColor="@color/color_white"
                 android:textSize="24sp"
-                app:layout_collapseMode="pin"
                 tools:visibility="visible" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
