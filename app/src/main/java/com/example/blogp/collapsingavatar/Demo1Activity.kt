@@ -19,19 +19,19 @@ class Demo1Activity : AppCompatActivity() {
     private lateinit var ivUserAvatar: ImageView
     private var EXPAND_AVATAR_SIZE: Float = 0F
     private var COLLAPSE_IMAGE_SIZE: Float = 0F
-    private var margin: Float = 0F
+    private var horizontalToolbarAvatarMargin: Float = 0F
     private lateinit var toolbar: Toolbar
     private lateinit var appBarLayout: AppBarLayout
     private var cashCollapseState: Pair<Int, Int>? = null
     private lateinit var titleToolbarText: AppCompatTextView
     private lateinit var titleToolbarTextSingle: AppCompatTextView
     private lateinit var invisibleTextViewWorkAround: AppCompatTextView
-    /*   private lateinit var collapsingAvatarContainer: FrameLayout*/
     private lateinit var background: FrameLayout
     /**/
-    private var startPointY: Float = 0F
-    private var animWeigt: Float = 0F
+    private var avatarAnimateStartPointY: Float = 0F
+    private var avatarCollapseAnimationChangeWeight: Float = 0F
     private var isCalculated = false
+    private var verticalToolbarAvatarMargin =0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class Demo1Activity : AppCompatActivity() {
         /**/
         EXPAND_AVATAR_SIZE = resources.getDimension(R.dimen.default_expanded_image_size)
         COLLAPSE_IMAGE_SIZE = resources.getDimension(R.dimen.default_collapsed_image_size)
-        margin = resources.getDimension(R.dimen.activity_margin)
+        horizontalToolbarAvatarMargin = resources.getDimension(R.dimen.activity_margin)
         /* collapsingAvatarContainer = findViewById(R.id.stuff_container)*/
         appBarLayout = findViewById(R.id.app_bar_layout)
         toolbar = findViewById(R.id.anim_toolbar)
@@ -48,12 +48,15 @@ class Demo1Activity : AppCompatActivity() {
         titleToolbarTextSingle = findViewById(R.id.tv_profile_name_single)
         background = findViewById(R.id.fl_background)
         invisibleTextViewWorkAround = findViewById(R.id.tv_workaround)
+
+        (toolbar.height - COLLAPSE_IMAGE_SIZE) * 2
         /**/
         appBarLayout.addOnOffsetChangedListener(
                 AppBarLayout.OnOffsetChangedListener { appBarLayout, i ->
                     if (isCalculated.not()) {
-                        startPointY = Math.abs((appBarLayout.height - (EXPAND_AVATAR_SIZE + margin)) / appBarLayout.totalScrollRange)
-                        animWeigt = 1 / (1 - startPointY)
+                        avatarAnimateStartPointY = Math.abs((appBarLayout.height - (EXPAND_AVATAR_SIZE + horizontalToolbarAvatarMargin)) / appBarLayout.totalScrollRange)
+                        avatarCollapseAnimationChangeWeight = 1 / (1 - avatarAnimateStartPointY)
+                        verticalToolbarAvatarMargin = (toolbar.height - COLLAPSE_IMAGE_SIZE) * 2
                         isCalculated = true
                     }
                     /**/
@@ -65,6 +68,21 @@ class Demo1Activity : AppCompatActivity() {
     }
 
     private fun updateViews(offset: Float) {
+        /* apply levels changes*/
+        when (offset) {
+            in 0.15F..1F -> {
+                titleToolbarText.apply {
+                    if (visibility != View.VISIBLE) visibility = View.VISIBLE
+                    alpha = (1 - offset) * 0.35F
+                }
+            }
+
+            in 0F..0.15F -> {
+                titleToolbarText.alpha = (1f)
+                ivUserAvatar.alpha = 1f
+            }
+        }
+
         /** collapse - expand switch*/
         when {
             offset < SWITCH_BOUND -> Pair(TO_EXPANDED, cashCollapseState?.second ?: WAIT_FOR_SWITCH)
@@ -90,9 +108,7 @@ class Demo1Activity : AppCompatActivity() {
                             titleToolbarTextSingle.apply {
                                 visibility = View.VISIBLE
                                 alpha = 0F
-                                animate()
-                                        .setDuration(500)
-                                        .alpha(1.0f)
+                                animate().setDuration(500).alpha(1.0f)
                             }
                         }
                     }
@@ -106,17 +122,17 @@ class Demo1Activity : AppCompatActivity() {
             /* Collapse avatar img*/
             ivUserAvatar.apply {
                 when {
-                    offset > startPointY -> {
-                        val animOffset = (offset - startPointY) * animWeigt
-                        val avatarSize = EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * animOffset
+                    offset > avatarAnimateStartPointY -> {
+                        val avatarCollapseAnimateOffset = (offset - avatarAnimateStartPointY) * avatarCollapseAnimationChangeWeight
+                        val avatarSize = EXPAND_AVATAR_SIZE - (EXPAND_AVATAR_SIZE - COLLAPSE_IMAGE_SIZE) * avatarCollapseAnimateOffset
                         this.layoutParams.also {
                             it.height = Math.round(avatarSize)
                             it.width = Math.round(avatarSize)
                         }
                         invisibleTextViewWorkAround.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset)
 
-                        this.translationX = (appBarLayout.width - margin - avatarSize) / 2 * animOffset
-                        this.translationY = ((toolbar.height - avatarSize) - (toolbar.height - COLLAPSE_IMAGE_SIZE) * 2) / 2 * animOffset
+                        this.translationX = ((appBarLayout.width - horizontalToolbarAvatarMargin - avatarSize) / 2) * avatarCollapseAnimateOffset
+                        this.translationY = ((toolbar.height  - verticalToolbarAvatarMargin - avatarSize ) / 2) * avatarCollapseAnimateOffset
                     }
                     else -> this.layoutParams.also {
                         if (it.height != EXPAND_AVATAR_SIZE.toInt()) {
@@ -138,5 +154,4 @@ class Demo1Activity : AppCompatActivity() {
         const val WAIT_FOR_SWITCH = 0
         const val SWITCHED = 1
     }
-
 }
