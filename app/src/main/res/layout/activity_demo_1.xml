@@ -47,15 +47,6 @@
                 android:fitsSystemWindows="true"
                 />
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imgb_avatar_wrap"
-                android:layout_width="@dimen/default_expanded_image_size"
-                android:layout_height="@dimen/default_expanded_image_size"
-                android:layout_gravity="bottom|center_horizontal"
-                android:src="@drawable/avatar_img"
-                app:civ_border_color="@color/color_white"
-                app:civ_border_width="1.5dp" />
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/anim_toolbar"
                 android:layout_width="match_parent"
@@ -116,6 +107,15 @@
                 android:textColor="@color/color_white"
                 android:textSize="24sp"
                 tools:visibility="visible" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgb_avatar_wrap"
+                android:layout_width="@dimen/default_expanded_image_size"
+                android:layout_height="@dimen/default_expanded_image_size"
+                android:layout_gravity="bottom|center_horizontal"
+                android:src="@drawable/avatar_img"
+                app:civ_border_color="@color/color_white"
+                app:civ_border_width="1.5dp" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
