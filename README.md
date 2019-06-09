@@ -5,11 +5,13 @@
 
 ### Reade my medium post [How to animate Collapsing Avatar Toolbar Sample](https://medium.com/@anatoliy8827/how-to-animate-collapsing-avatar-toolbar-sample-f3f37ab6c35e) on [medium](https://medium.com) please.
 
-### demo 1
+# demo 1
+
 
 ![](https://github.com/SergeyBurlaka/CollapsingAvatarToolbarSample/blob/develop/art/beil_gif_14m_cropped.gif)
 
-### demo 2
+# demo 2
+
 
 ![](https://github.com/SergeyBurlaka/CollapsingAvatarToolbarSample/blob/develop/art/ledger_gif_15M_cropped.gif)
 
