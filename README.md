@@ -5,11 +5,12 @@
 
 ### Read my post [How to animate Collapsing Avatar Toolbar Sample](https://medium.com/@anatoliy8827/how-to-animate-collapsing-avatar-toolbar-sample-f3f37ab6c35e) on [medium](https://medium.com) please.
 
-![](https://github.com/SergeyBurlaka/CollapsingAvatarToolbarSample/blob/develop/art/crop_gif.gif)
+![](https://github.com/SergeyBurlaka/CollapsingAvatarToolbarSample/blob/develop/art/beil_14M_gif.gif)
 
-![](https://github.com/SergeyBurlaka/CollapsingAvatarToolbarSample/blob/develop/art/test_high.gif)
+![](https://github.com/SergeyBurlaka/CollapsingAvatarToolbarSample/blob/develop/art/ledger_gif_15M.gif)
 
-[![watch real app working on video](http://dl4.joxi.net/drive/2018/11/21/0030/3308/1993964/64/cc0eba3385.jpg)](https://youtu.be/iSfvY_ZNQwo)
+[![watch real app working on video](http://joxi.ru/a2XqXO6IwM0keA)]
+(https://youtu.be/XGAY-VymlUI)
  
   
 
