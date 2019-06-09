@@ -9,10 +9,8 @@
 
 ![](https://github.com/SergeyBurlaka/CollapsingAvatarToolbarSample/blob/develop/art/ledger_gif_15M_cropped.gif)
 
-[![watch real app working on video](https://github.com/SergeyBurlaka/CollapsingAvatarToolbarSample/blob/develop/art/3a44044605.jpg)]
-(https://youtu.be/XGAY-VymlUI)
  
-  
+[!watch real app working on video](https://github.com/SergeyBurlaka/CollapsingAvatarToolbarSample/blob/develop/art/3a44044605.jpg)](https://youtu.be/XGAY-VymlUI)
 
 
 
