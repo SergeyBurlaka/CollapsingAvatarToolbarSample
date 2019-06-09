@@ -3,7 +3,7 @@
 [![License Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=true)](http://www.apache.org/licenses/LICENSE-2.0)
 
 
-### read my medium post [How to animate Collapsing Avatar Toolbar Sample](https://medium.com/@anatoliy8827/how-to-animate-collapsing-avatar-toolbar-sample-f3f37ab6c35e) on [medium](https://medium.com) please.
+### to read my medium post [How to animate Collapsing Avatar Toolbar Sample](https://medium.com/@anatoliy8827/how-to-animate-collapsing-avatar-toolbar-sample-f3f37ab6c35e) 
 
 # demo 1
 
